@@ -25,3 +25,317 @@ console.log(isMatch);  // This will print true
 In the example above, the function checks if the string 'hello' matches the pattern `^h.llo$`, which it does, so it will print `true`. 
 
 You can change the string and pattern in the example usage to test with different inputs.
+
+---
+
+> Create simple React component to validate entered into input string
+
+---
+
+Sure, let's create a simple React component that has an input field. When the user types into this field, the component will validate the entered string based on our previously defined rules, and display a message indicating whether the entered string is valid or not.
+
+Here's how you can create this component:
+
+```javascript
+import React, { useState } from 'react';
+
+const StringValidator = ({ maxLength }) => {
+  const [input, setInput] = useState('');
+  const [isValid, setIsValid] = useState(false);
+
+  const validate = (str) => {
+    const pattern = `^(?=.{1,${maxLength}})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~])\\S*$`;
+    const regex = new RegExp(pattern);
+    return regex.test(str);
+  };
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setInput(value);
+    setIsValid(validate(value));
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Enter your string..."
+      />
+      <div>
+        {isValid ? 'String is valid.' : 'String is not valid.'}
+      </div>
+    </div>
+  );
+}
+
+export default StringValidator;
+```
+
+You can use this component in your React app as follows:
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import StringValidator from './StringValidator';
+
+function App() {
+  return (
+    <div>
+      <h1>String Validation</h1>
+      <StringValidator maxLength={10} />
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+
+With this implementation, as users type into the input, they will get immediate feedback on whether their string meets the validation criteria.
+
+---
+
+> Create simple css for it to be in center of screen
+
+---
+
+To center the `StringValidator` component both horizontally and vertically in the screen, you can use flexbox or grid. Here's a simple CSS solution using flexbox:
+
+```css
+/* styles.css or App.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;  /* Choose your preferred font */
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+StringValidator {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+```
+
+Ensure that you link this CSS file in your React app. If you've used `create-react-app`, simply import the CSS at the top of your JS file:
+
+```javascript
+import './styles.css';  // or './App.css' depending on your file name
+```
+
+With this CSS, your `StringValidator` component should be centered both horizontally and vertically on the screen. The input field will stretch to fit the width of the container (`StringValidator`), and there's a bit of margin at the bottom for spacing. Adjust as needed to fit your design preferences.
+
+---
+
+> Create jest unit tests for regex functions 
+
+---
+
+Certainly! Let's create Jest unit tests for the `validateString` function that utilizes the regex pattern.
+
+Firstly, ensure you have `jest` set up in your project. If not, you can quickly set it up in your project with:
+
+```bash
+npm install --save-dev jest
+```
+
+Then, in your `package.json`, set the test script:
+
+```json
+"scripts": {
+  "test": "jest"
+}
+```
+
+Now, let's create our tests:
+
+```javascript
+// validateString.js
+const validateString = (str, pattern) => {
+  const regex = new RegExp(pattern);
+  return regex.test(str);
+};
+
+module.exports = validateString;
+
+// validateString.test.js
+const validateString = require('./validateString');
+
+describe('validateString', () => {
+  const maxLength = 10;
+  const pattern = `^(?=.{1,${maxLength}})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~])\\S*$`;
+
+  test('should return true for valid string', () => {
+    const testStr = 'Aa1!';
+    expect(validateString(testStr, pattern)).toBe(true);
+  });
+
+  test('should return false for string missing uppercase', () => {
+    const testStr = 'aa1!';
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+  test('should return false for string missing lowercase', () => {
+    const testStr = 'AA1!';
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+  test('should return false for string missing digit', () => {
+    const testStr = 'Aaa!';
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+  test('should return false for string missing special character', () => {
+    const testStr = 'Aa1a';
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+  test('should return false for string with whitespace character', () => {
+    const testStr = 'Aa 1!';
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+  test('should return false for too short string', () => {
+    const testStr = 'A1!';
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+  test('should return false for too long string', () => {
+    const testStr = 'Aa1!'.repeat(maxLength + 1);
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+});
+```
+
+Once you've set up the above, you can run `npm test` or `yarn test` (depending on your setup) to execute the Jest tests.
+
+This test suite covers the primary scenarios and edge cases for the regex validation. If you have more cases in mind, you can easily add more tests to the suite.
+
+---
+
+> Crate jest unit tests for StringValidator 
+
+---
+
+To test the `StringValidator` React component using Jest, we'd ideally want to use `@testing-library/react` which works well with Jest for testing React components. This testing library is more user-centric and is generally recommended for React testing.
+
+First, you'll need to install necessary libraries:
+
+```bash
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+```
+
+Next, create tests for the `StringValidator` component:
+
+```javascript
+// StringValidator.test.js
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import StringValidator from './StringValidator';
+
+describe('StringValidator', () => {
+  const maxLength = 10;
+  const pattern = `^(?=.{1,${maxLength}})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~])\\S*$`;
+
+  test('renders without crashing', () => {
+    render(<StringValidator maxLength={maxLength} />);
+  });
+
+  test('shows not valid message on empty input', () => {
+    const { getByPlaceholderText, getByText } = render(<StringValidator maxLength={maxLength} />);
+    const inputElement = getByPlaceholderText('Enter your string...');
+    fireEvent.change(inputElement, { target: { value: '' } });
+    expect(getByText('String is not valid.')).toBeInTheDocument();
+  });
+
+  test('shows valid message for valid string', () => {
+    const { getByPlaceholderText, getByText } = render(<StringValidator maxLength={maxLength} />);
+    const inputElement = getByPlaceholderText('Enter your string...');
+    fireEvent.change(inputElement, { target: { value: 'Aa1!' } });
+    expect(getByText('String is valid.')).toBeInTheDocument();
+  });
+
+  // You can add more test cases for each specific scenario or validation criteria.
+});
+```
+
+This test suite:
+
+1. Renders the `StringValidator` component.
+2. Checks the validation message for an empty string.
+3. Checks the validation message for a valid string.
+
+To run the tests, execute:
+
+```bash
+npm test
+```
+
+Feel free to expand the test suite to cover more cases or nuances of the component's behavior.
+
+
+---
+
+
+> Looks like a test with 
+
+ test('should return false for too long string', () => {
+    const testStr = 'Aa1!'.repeat(maxLength + 1);
+    expect(validateString(testStr, pattern)).toBe(false);
+  });
+
+is always false, I believe something wrong with maxLength injections
+
+
+---
+
+The issue you've described can occur if the pattern is not constructed correctly with the dynamic `maxLength` value. Let's double-check the pattern construction for correctness.
+
+Here's the pattern we defined earlier:
+
+```javascript
+const pattern = `^(?=.{1,${maxLength}})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~])\\S*$`;
+```
+
+The look-ahead `(?=.{1,${maxLength}})` ensures that the length of the string is between 1 and `maxLength`. However, this presents an issue for the "too long" test because it doesn't strictly check if the string exceeds `maxLength`. 
+
+Let's modify the pattern to explicitly check the string's length:
+
+```javascript
+const pattern = `^(?=.{1,${maxLength}}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~])\\S*$`;
+```
+
+Notice the `$` inside the look-ahead after `${maxLength}`. This will ensure that the string's length doesn't exceed `maxLength`.
+
+Now, the test:
+
+```javascript
+test('should return false for too long string', () => {
+    const testStr = 'Aa1!'.repeat(maxLength + 1);
+    expect(validateString(testStr, pattern)).toBe(false);
+});
+```
+
+Should correctly evaluate to `false` for a string that exceeds the specified `maxLength`.
+
+With this change, your test should now behave as expected.

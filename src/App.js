@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import { validate } from './lib/validator';
 
-function App() {
+const App = () => {
+  const [input, setInput] = useState('');
+  const [isValid, setIsValid] = useState(false);
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setInput(value);
+    setIsValid(validate(value));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="app">
+      <input
+        type="text"
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Enter your string..."
+      />
+      <div>{isValid ? 'String is valid.' : 'String is not valid.'}</div>
     </div>
   );
-}
+};
 
 export default App;

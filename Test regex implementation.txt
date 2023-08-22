@@ -1,0 +1,70 @@
+I have JS function 
+
+const validateString = (str, pattern) => {
+  const regex = new RegExp(pattern);
+  return regex.test(str);
+};
+
+Create the subsequent function responsible for testing the previously implemented regular expression implementation for the variety of sample inputs and edge cases: too short input, too long input, matching input length, missing uppercase, lowercase, special character, digit, excess whitespace characters in various positions.
+
+•	This regular expression should validate the maximum string length (passed as parameter); it should return true if the string length is within the acceptable range and false if it is not.
+•	This regular expression should also validate that the string contains at least one uppercase letter, one lowercase letter, one digit, and one special character from a predefined list: !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~. It should return true if the criteria are met and false if they are not.
+•	This regular expression should validate that the string does not contain any whitespace characters (spaces, tabs, or newlines). This should return a false if any whitespace characters are found.
+
+---
+
+First, let's break down the requirements for the regular expression:
+
+1. Maximum string length (parameterized)
+2. At least one uppercase letter
+3. At least one lowercase letter
+4. At least one digit
+5. At least one special character from a predefined list
+6. No whitespace characters
+
+To achieve this, the following regular expression can be constructed:
+```regex
+^(?=.{1,maxLength})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])\S*$
+```
+
+Where `maxLength` is a placeholder for the maximum string length.
+
+Now, let's write a test function:
+
+```javascript
+const validateString = (str, pattern) => {
+  const regex = new RegExp(pattern);
+  return regex.test(str);
+};
+
+const testValidateString = (maxLength) => {
+  const pattern = `^(?=.{1,${maxLength}})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~])\\S*$`;
+  
+  const tests = [
+    '', // too short
+    'Aa1!', // matching input length
+    'Aa1!'.repeat(maxLength + 1), // too long
+    'aa1!', // missing uppercase
+    'AA1!', // missing lowercase
+    'Aaa!', // missing digit
+    'Aa1a', // missing special character
+    'Aa 1!', // whitespace character
+    ' Aa1!', // leading whitespace character
+    'Aa1! ', // trailing whitespace character
+    'Aa1!\n', // newline whitespace character
+    'Aa1!\t', // tab whitespace character
+  ];
+
+  tests.forEach((testStr, index) => {
+    console.log(`Test ${index + 1}: ${validateString(testStr, pattern)}`);
+  });
+};
+
+// Example usage:
+testValidateString(10);
+```
+
+This function first constructs the regex pattern based on the provided maximum length. It then iterates through various test cases, including edge cases, and prints the result of each validation check.
+
+You can change the `testValidateString(10);` call at the end to test for any maximum length you desire.
+
