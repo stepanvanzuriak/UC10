@@ -1,4 +1,41 @@
-### UC10
+# UC10
+
+## Project Overview
+
+The React RegExp Validator is a `create-react-app` project designed to validate input strings based on a specific set of criteria using regular expressions. The aim is to ensure that strings adhere to certain rules for security or data integrity purposes.
+
+## Regular Expression Criteria
+
+1. **String Length**: Validates a maximum string length of 10 characters.
+2. **Character Types**:
+    - At least one uppercase letter.
+    - At least one lowercase letter.
+    - At least one digit.
+    - At least one special character from the list: `!"#$%&'()*+,-./:
+
+;<=>?@[\]^_`{|}~`
+3. **No Whitespace**: Validates that the string does not contain any whitespace characters (spaces, tabs, or newlines).
+4. **Optimization**: The regex should be optimized for execution speed and simplicity while still fulfilling all the aforementioned criteria.
+
+## Implementation
+
+- The regular expression is implemented as a utility function, making it reusable for various input validation scenarios.
+- The React UI features a text input field, and upon entry or change, it runs the validation against the input value.
+- The UI will provide visual feedback (success or error) based on the validation result.
+
+## Testing
+
+The regular expression is tested on a variety of sample inputs and edge cases to ensure it functions properly.
+
+## Caveats & Limitations
+
+- This regex is tailored to the requirements as specified. If the criteria change, modifications will be needed.
+- While optimized, very long strings might still introduce a performance overhead when being checked.
+- The predefined list of special characters might not cater to all possible use cases. Adjust as necessary.
+
+## UI
+
+The React application provides an intuitive interface for users to input their string. Real-time feedback is provided on whether the string meets the criteria or not. A clear error message highlights which criteria is not being met, enhancing user experience.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
